@@ -13,17 +13,26 @@ namespace BackupService
     /// </summary>
     internal class ZipUtil
     {
-        private string FilePath;
+        private string filePath;
+
         internal ZipUtil(string filePath)
         {
-            this.FilePath = filePath;
+            this.filePath = filePath;
+        }
+
+        internal void AddFileToZip(string _filePath, string relativePath)
+        {
+            using (var zipArchive = ZipFile.Open(this.filePath, ZipArchiveMode.Update))
+            {
+                zipArchive.CreateEntryFromFile(_filePath, relativePath);
+            }
         }
 
         static internal void CreateOrThrow(string filePath)
         {
             if (File.Exists(filePath))
             {
-                throw new DirectoryUtil.EntityExistsException();
+                throw new MiscHelper.EntityExistsException();
             }
             File.Create(filePath);
         }

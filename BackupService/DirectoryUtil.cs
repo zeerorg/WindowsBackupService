@@ -9,6 +9,8 @@ namespace BackupService
 {
     class DirectoryUtil
     {
+        private DirectoryUtil() { }
+
         internal static void CreateIfNotExist(string dir)
         {
             DirectoryInfo directory = new DirectoryInfo(dir);
@@ -23,7 +25,7 @@ namespace BackupService
             DirectoryInfo directory = new DirectoryInfo(dir);
             if (directory.Exists)
             {
-                throw new EntityExistsException();
+                throw new MiscHelper.EntityExistsException();
             }
             directory.Create();
         }
@@ -31,13 +33,6 @@ namespace BackupService
         internal static string GetFolderName(string directory)
         {
             return new DirectoryInfo(directory).Name;
-        }
-
-        internal class EntityExistsException : Exception
-        {
-            internal EntityExistsException() { }
-            internal EntityExistsException(string message) : base(message) { }
-            internal EntityExistsException(string message, Exception inner) : base(message, inner) { }
         }
     }
 }

@@ -13,16 +13,61 @@ namespace BackupService
     /// </summary>
     class CompFileUtil
     {
-        internal static void CreateOrThrow(string filePath)
+        string filePath;
+
+        internal HashSet<string> entries
         {
-            if (File.Exists(filePath))
-            {
-                throw new DirectoryUtil.EntityExistsException();
-            }
-            File.Create(filePath);
+            get;
+            private set;
         }
 
-        internal static string GetComFileFromFolder(string folder, string date)
+        internal CompFileUtil(string _filePath)
+        {
+            this.filePath = _filePath;
+            entries = new HashSet<string>();
+            foreach (var line in File.ReadAllLines(_filePath))
+            {
+                entries.Add(line);
+            }
+        }
+
+        internal void AddFile(string _filePath)
+        {
+            File.AppendAllText(this.filePath, _filePath + Environment.NewLine);
+            entries.Add(_filePath);
+        }
+
+        internal void UpdateFileEntries(HashSet<string> newEntries)
+        {
+            string tempFile = Path.GetTempFileName();
+
+            foreach (var line in File.ReadLines(this.filePath))
+            {
+                if(newEntries.Contains(line))
+                    File.AppendAllText(tempFile, line + Environment.NewLine);
+            }
+
+            File.Delete(this.filePath);
+            File.Move(tempFile, this.filePath);
+            entries = newEntries;
+        }
+
+        internal void AddDirectory(string dirPath)
+        {
+            File.AppendAllText(this.filePath, dirPath + Environment.NewLine);
+            entries.Add(dirPath);
+        }
+
+        internal static void CreateOrThrow(string _filePath)
+        {
+            if (File.Exists(_filePath))
+            {
+                throw new MiscHelper.EntityExistsException();
+            }
+            File.Create(_filePath);
+        }
+
+        internal static string GetCompFilePathFromFolder(string folder, string date)
         {
             return Path.Combine(folder, date + ".zip.comp.txt");
         }

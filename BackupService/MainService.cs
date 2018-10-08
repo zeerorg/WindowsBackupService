@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BackupService
@@ -19,6 +20,7 @@ namespace BackupService
 
         protected override void OnStart(string[] args)
         {
+            Thread.Sleep(30000);
             string backupFolder = ConfigUtil.GetBackupDirectory();
             CompressUtil dir = new CompressUtil(backupFolder);
 
@@ -29,6 +31,12 @@ namespace BackupService
             }
 
             List<string> dirsToBackup = ConfigUtil.GetDirectoriesToBackup();
+            foreach (var dirPath in dirsToBackup)
+            {
+                DirToBackup dirToBackup = new DirToBackup(dirPath, DirectoryUtil.GetFolderName(dirPath), backup);
+                dirToBackup.StartBackup();
+                dirToBackup.DoneBackup();
+            }
         }
 
         protected override void OnStop()

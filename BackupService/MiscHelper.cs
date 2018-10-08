@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,6 +32,24 @@ namespace BackupService
                 return false;
             }
             return true;
+        }
+
+        [Serializable]
+        public class EntityExistsException : Exception
+        {
+            internal EntityExistsException() { }
+            internal EntityExistsException(string message) : base(message) { }
+            internal EntityExistsException(string message, Exception inner) : base(message, inner) { }
+            protected EntityExistsException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        }
+
+        [Serializable]
+        public class EntityNotFoundException : Exception
+        {
+            internal EntityNotFoundException() { }
+            internal EntityNotFoundException(string message) : base(message) { }
+            internal EntityNotFoundException(string message, Exception inner) : base(message, inner) { }
+            protected EntityNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context) { }
         }
     }
 }

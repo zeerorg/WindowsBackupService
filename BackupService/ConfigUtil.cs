@@ -9,6 +9,8 @@ namespace BackupService
 {
     class ConfigUtil
     {
+        private ConfigUtil() { }
+
         internal static string GetBackupDirectory()
         {
             return ConfigurationManager.AppSettings["BackupFolder"];

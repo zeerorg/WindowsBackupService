@@ -12,9 +12,9 @@ namespace BackupService
     /// </summary>
     internal class BackupClass
     {
-        string AbsPath;
-        string ZipFilePath;
-        string ZipCompletedFilePath;
+        string absPath;
+        ZipUtil zip;
+        CompFileUtil completedFile;
 
         /// <summary>
         /// The date when backup was created
@@ -36,11 +36,36 @@ namespace BackupService
 
         internal BackupClass(string absPath)
         {
-            this.AbsPath = absPath;
-            this.Name = DirectoryUtil.GetFolderName(this.AbsPath);
-            this.ZipFilePath = ZipUtil.GetZipFilePathFromFolder(this.AbsPath, this.Name);
-            this.ZipCompletedFilePath = CompFileUtil.GetComFileFromFolder(this.AbsPath, this.Name);
+            this.absPath = absPath;
+            this.Name = DirectoryUtil.GetFolderName(this.absPath);
+            this.zip = new ZipUtil(ZipUtil.GetZipFilePathFromFolder(this.absPath, this.Name));
+            this.completedFile = new CompFileUtil(CompFileUtil.GetCompFilePathFromFolder(this.absPath, this.Name));
             this.CreatedOn = MiscHelper.StringToDate(this.Name);
+        }
+
+        internal void AddFileToZip(string filePath, string relativePath)
+        {
+            this.zip.AddFileToZip(filePath, relativePath);
+        }
+
+        internal void AddDoneFileEntry(string filePath)
+        {
+            this.completedFile.AddFile(filePath);
+        }
+
+        internal HashSet<string> GetCompletedEntries()
+        {
+            return this.completedFile.entries;
+        }
+
+        internal void UpdateFileEntries(HashSet<string> newEntries)
+        {
+            this.completedFile.UpdateFileEntries(newEntries);
+        }
+
+        internal void AddDirectoryEntry(string dirPath)
+        {
+            this.completedFile.AddDirectory(dirPath);
         }
     }
 }

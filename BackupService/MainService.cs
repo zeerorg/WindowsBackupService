@@ -18,12 +18,8 @@ namespace BackupService
             InitializeComponent();
         }
 
-        protected override void OnStart(string[] args)
+        private static void Main(CompressUtil dir)
         {
-            Thread.Sleep(30000);
-            string backupFolder = ConfigUtil.GetBackupDirectory();
-            CompressUtil dir = new CompressUtil(backupFolder);
-
             BackupClass backup = dir.GetLatestBackup();
             if ((DateTime.Now - backup.CreatedOn).TotalDays > 7)
             {
@@ -37,6 +33,18 @@ namespace BackupService
                 dirToBackup.StartBackup();
                 dirToBackup.DoneBackup();
             }
+        }
+
+        protected override void OnStart(string[] args)
+        {
+#if DEBUG
+            Thread.Sleep(30000);
+#endif
+            string backupFolder = ConfigUtil.GetBackupDirectory();
+            CompressUtil dir = new CompressUtil(backupFolder);
+
+            var mainThread = new Thread(new ThreadStart(() => Main(dir)));
+            mainThread.Start();
         }
 
         protected override void OnStop()

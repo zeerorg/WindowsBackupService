@@ -5,18 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackupService
+namespace BackupLib
 {
     /// <summary>
     /// A class that represents a directory that needs to be backed up
     /// </summary>
-    class DirToBackup
+    public class DirToBackup
     {
         DirectoryInfo dir;
         BackupClass backup;
         string relativePath;
 
-        internal DirToBackup(string dirPath, string prevDirPath, BackupClass backup)
+        public DirToBackup(string dirPath, string prevDirPath, BackupClass backup)
         {
             this.dir = new DirectoryInfo(dirPath);
             this.relativePath = Path.Combine(prevDirPath, this.dir.Name);
@@ -27,7 +27,7 @@ namespace BackupService
             }
         }
 
-        internal void StartBackup()
+        public void StartBackup()
         {
             foreach (string subDirPath in dir.EnumerateDirectories().OrderBy(dir => dir.Name).Select(dir => dir.FullName))
             {
@@ -44,10 +44,10 @@ namespace BackupService
             }
         }
 
-        internal void DoneBackup()
+        public void DoneBackup()
         {
             HashSet<string> completed = this.backup.GetCompletedEntries();
-            HashSet<string> newEntries = new HashSet<string>(completed.Where(entry => !File.GetAttributes(entry).HasFlag(FileAttributes.Directory)));
+            HashSet<string> newEntries = new HashSet<string>(completed.Where(entry => !entry.Contains(this.dir.FullName)));
             this.backup.UpdateFileEntries(newEntries);
             this.backup.AddDirectoryEntry(this.dir.FullName);
         }

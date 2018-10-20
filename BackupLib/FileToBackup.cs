@@ -5,18 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackupService
+namespace BackupLib
 {
     class FileToBackup
     {
         string filePath;
+        FileInfo file;
         BackupClass backup;
         string relativePath;
 
         internal FileToBackup(string filePath, string relativePath, BackupClass backup)
         {
             this.filePath = filePath;
-            this.relativePath = relativePath;
+            this.file = new FileInfo(filePath);
+            this.relativePath = Path.Combine(relativePath, this.file.Name);
             this.backup = backup;
         }
 

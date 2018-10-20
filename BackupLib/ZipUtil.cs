@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BackupService
+namespace BackupLib
 {
     /// <summary>
     /// A utility class for dealing with Zip files
@@ -22,9 +17,12 @@ namespace BackupService
 
         internal void AddFileToZip(string _filePath, string relativePath)
         {
-            using (var zipArchive = ZipFile.Open(this.filePath, ZipArchiveMode.Update))
+            using (var fileStream = new FileStream(this.filePath, FileMode.Open))
             {
-                zipArchive.CreateEntryFromFile(_filePath, relativePath);
+                using (var zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Create))
+                {
+                    zipArchive.CreateEntryFromFile(_filePath, relativePath, CompressionLevel.NoCompression);
+                }
             }
         }
 

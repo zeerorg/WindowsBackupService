@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackupService
+namespace BackupLib
 {
-    class DirectoryUtil
+    public class DirectoryUtil
     {
         private DirectoryUtil() { }
 
-        internal static void CreateIfNotExist(string dir)
+        public static void CreateIfNotExist(string dir)
         {
             DirectoryInfo directory = new DirectoryInfo(dir);
             if (!directory.Exists)
@@ -20,7 +20,7 @@ namespace BackupService
             }
         }
 
-        internal static void CreateOrThrow(string dir)
+        public static void CreateOrThrow(string dir)
         {
             DirectoryInfo directory = new DirectoryInfo(dir);
             if (directory.Exists)
@@ -30,7 +30,7 @@ namespace BackupService
             directory.Create();
         }
 
-        internal static string GetFolderName(string directory)
+        public static string GetFolderName(string directory)
         {
             return new DirectoryInfo(directory).Name;
         }

@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackupService
+namespace BackupLib
 {
     /// <summary>
     /// A utility to compress files and manipulate backup folder
     /// A backup = a folder by name dd_mm_yyyy which contains ".zip" and ".zip.comp"
     /// </summary>
-    internal class CompressUtil
+    public class CompressUtil
     {
         private string BackupFolder;
 
@@ -20,7 +20,7 @@ namespace BackupService
         /// Constructor for CompressUtil class
         /// </summary>
         /// <param name="folder">The backup folder</param>
-        internal CompressUtil(string folder)
+        public CompressUtil(string folder)
         {
             this.BackupFolder = folder;
             DirectoryUtil.CreateIfNotExist(folder);
@@ -30,7 +30,7 @@ namespace BackupService
         /// Create a .zip and .zip.comp file inside the backup directory to be used for current backup
         /// </summary>
         /// <returns>Path of the zip file</returns>
-        internal BackupClass CreateBackup()
+        public BackupClass CreateBackup()
         {
             string date = MiscHelper.GetDateString();
             string absolutePath = Path.Combine(this.BackupFolder, date);
@@ -50,7 +50,7 @@ namespace BackupService
         /// Gets the latest backup
         /// </summary>
         /// <returns>Getting the latest backup</returns>
-        internal BackupClass GetLatestBackup()
+        public BackupClass GetLatestBackup()
         {
             IEnumerable<DirectoryInfo> backups = new DirectoryInfo(this.BackupFolder).EnumerateDirectories();
 

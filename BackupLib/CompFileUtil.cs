@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace BackupService
+namespace BackupLib
 {
     /// <summary>
     /// Class for dealing with ".zip.comp.txt" file
@@ -25,9 +27,22 @@ namespace BackupService
         {
             this.filePath = _filePath;
             entries = new HashSet<string>();
-            foreach (var line in File.ReadAllLines(_filePath))
+            bool done = false;
+            while (!done)
             {
-                entries.Add(line);
+                Thread.Sleep(10);
+                try
+                {
+                    foreach (var line in File.ReadAllLines(_filePath))
+                    {
+                        entries.Add(line);
+                    }
+                    done = true;
+                }
+                catch (IOException)
+                {
+                    done = false;
+                }   
             }
         }
 

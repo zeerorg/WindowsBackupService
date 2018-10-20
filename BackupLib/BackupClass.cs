@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackupService
+namespace BackupLib
 {
     /// <summary>
     /// Class for dealing with all the entities realted to the backup
     /// This class is only created for backups that exist, i.e. the backup folder must exist
     /// </summary>
-    internal class BackupClass
+    public class BackupClass
     {
         string absPath;
         ZipUtil zip;
@@ -19,7 +19,7 @@ namespace BackupService
         /// <summary>
         /// The date when backup was created
         /// </summary>
-        internal DateTime CreatedOn
+        public DateTime CreatedOn
         {
             get;
             private set;
@@ -28,13 +28,13 @@ namespace BackupService
         /// <summary>
         /// The name of folder in "dd_MM_yyyy" frmat
         /// </summary>
-        internal string Name
+        public string Name
         {
             get;
             private set;
         }
 
-        internal BackupClass(string absPath)
+        public BackupClass(string absPath)
         {
             this.absPath = absPath;
             this.Name = DirectoryUtil.GetFolderName(this.absPath);
